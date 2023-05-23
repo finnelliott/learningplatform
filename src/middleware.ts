@@ -32,7 +32,6 @@ export default authMiddleware({
   beforeAuth(req) {
     return rewrites(req);
   },
-  publicRoutes: ["/", "/sign-in", "/learn/sign-in", "/create/sign-in", "/(courses)(.*)"],
   afterAuth(auth, req, evt) {
     const hostname = req.headers.get("host") || process.env.DOMAIN || "localhost:3000";
     const hostUrl = process.env.NODE_ENV === "production" && process.env.VERCEL === "1"
@@ -43,4 +42,5 @@ export default authMiddleware({
       return NextResponse.redirect(signInUrl);
     }
   },
+  publicRoutes: ["/", "/sign-in", "/learn/sign-in", "/create/sign-in", "/(courses)(.*)"],
 });
