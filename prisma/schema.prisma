@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String                   @id @default(auto()) @map("_id") @db.ObjectId
+  clerk_id         String?                  @unique
+  created_courses  Course[]
+  enrolled_courses EnrolledUsersOnCourses[]
+}
+
+model EnrolledUsersOnCourses {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  user      User   @relation(fields: [user_id], references: [id])
+  user_id   String @db.ObjectId
+  course    Course @relation(fields: [course_id], references: [id])
+  course_id String @db.ObjectId
+}
+
+model Course {
+  id              String                   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String
+  tags            TagsOnCourses[]
+  created_by      User                     @relation(fields: [created_by_id], references: [id])
+  created_by_id   String                   @db.ObjectId
+  enrolled_users  EnrolledUsersOnCourses[]
+  price_usd       Float
+  lessons         Lesson[]
+  cover_image_url String
+}
+
+model TagsOnCourses {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  course    Course    @relation(fields: [course_id], references: [id])
+  course_id String    @db.ObjectId
+  tag       CourseTag @relation(fields: [tag_id], references: [id])
+  tag_id    String    @db.ObjectId
+}
+
+model CourseTag {
+  id      String          @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  courses TagsOnCourses[]
+}
+
+model Lesson {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  description      String
+  tags             TagsOnLessons[]
+  course           Course          @relation(fields: [course_id], references: [id])
+  course_id        String          @db.ObjectId
+  video_url        String
+  transcription    String
+  markdown         String
+  duration_seconds Int
+  order            Int
+}
+
+model TagsOnLessons {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  lesson    Lesson    @relation(fields: [lesson_id], references: [id])
+  lesson_id String    @db.ObjectId
+  tag       LessonTag @relation(fields: [tag_id], references: [id])
+  tag_id    String    @db.ObjectId
+}
+
+model LessonTag {
+  id      String          @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  lessons TagsOnLessons[]
+}
