@@ -19,11 +19,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return new NextResponse("Missing Cloudflare credentials", { status: 500 })
   }
 
-//   // Check user is authenticated
-//   const {userId} = auth();
-//   if(!userId){
-//     return new NextResponse("Unauthorized", { status: 401 });
-//   }
+  // Check user is authenticated
+  const {userId} = auth();
+  if(!userId){
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
 
   // Get course ID from metadata
   const metadata = request.headers.get('upload-metadata') || '';

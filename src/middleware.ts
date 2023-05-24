@@ -4,7 +4,7 @@ import { authMiddleware } from "@clerk/nextjs";
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
 
@@ -17,6 +17,10 @@ function rewrites(req: NextRequest) {
     ? hostname.replace(`.${process.env.DOMAIN}`, "").replace(`.${process.env.VERCEL_TEAM_DOMAIN}`, "")
     : hostname.replace(`.${process.env.DOMAIN}`, "");
 
+  if (path.startsWith("/api")) {
+    return NextResponse.next();
+  }
+  
   if (currentHost === "learn" || currentHost === "create") {
     url.pathname = `/${currentHost}${url.pathname}`;
     return NextResponse.rewrite(url);
