@@ -25,9 +25,6 @@ export default async function Page({
             lessons: true
         }
     });
-    function generateCourse() {
-        return;
-    }
 
     return (
         <div className="">
@@ -50,7 +47,7 @@ export default async function Page({
                 ))}
             </ul>
             : <p>No lessons yet</p>}
-            {course?.lessons && course?.lessons.length > 0 && <button onClick={() => generateCourse()}>Generate course</button>}
+            {course?.lessons && course?.lessons.length > 0 && <button>Generate course</button>}
         </div>
     )
 }
