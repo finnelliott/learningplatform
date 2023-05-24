@@ -33,6 +33,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const course_id = parsedMetadata['course_id'];
   const lesson_id = parsedMetadata['lesson_id'];
 
+  // Check the user is the creator of the course they are uploading to
+  const course = await prisma.course.findUnique({
+        where: {
+            id: course_id
+        },
+        select: {
+            created_by: {
+                select: {
+                    clerk_id: true
+                }
+            }
+        }
+  });
+  if (course?.created_by.clerk_id !== userId) {
+    return new NextResponse("Only the creator of the course can upload content", { status: 401 });
+  }
+
   // Create a new lesson and connect it to the course
   const lesson = await prisma.lesson.create({
     data: {
