@@ -56,7 +56,7 @@ const Upload = ({ course_id }: { course_id: string }) => {
                 body: JSON.stringify({
                     id: lessonId,
                     video_upload_url: response.uploadURL,
-                    video_id: response.uploadURL?.replace("https://upload.videodelivery.net/tus/", "").replace("?tusv2=true", "")
+                    video_id: response.uploadURL?.replace("https://upload.videodelivery.net/tus/", "").split("?")[0],
                 }),
             });
           } catch (error) {
