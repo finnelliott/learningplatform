@@ -1,3 +1,4 @@
+// middleware/index.ts
 import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 
@@ -7,7 +8,7 @@ export const config = {
   ],
 };
 
-async function rewrites(req: NextRequest) {
+function rewrites(req: NextRequest) {
   const url = req.nextUrl;
   const hostname = req.headers.get("host") || process.env.DOMAIN || "localhost:3000";
   const path = url.pathname;

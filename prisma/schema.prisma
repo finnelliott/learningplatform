@@ -24,15 +24,15 @@ model EnrolledUsersOnCourses {
 
 model Course {
   id              String                   @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  description     String
+  name            String?
+  description     String?
   tags            TagsOnCourses[]
   created_by      User                     @relation(fields: [created_by_id], references: [id])
   created_by_id   String                   @db.ObjectId
   enrolled_users  EnrolledUsersOnCourses[]
-  price_usd       Float
+  price_usd       Float?
   lessons         Lesson[]
-  cover_image_url String
+  cover_image_url String?
 }
 
 model TagsOnCourses {
@@ -51,16 +51,17 @@ model CourseTag {
 
 model Lesson {
   id               String          @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  description      String
+  name             String?
+  description      String?
   tags             TagsOnLessons[]
   course           Course          @relation(fields: [course_id], references: [id])
   course_id        String          @db.ObjectId
-  video_url        String
-  transcription    String
-  markdown         String
-  duration_seconds Int
-  order            Int
+  video_upload_url String?
+  video_id         String?
+  transcription    String?
+  markdown         String?
+  duration_seconds Int?
+  order            Int?
 }
 
 model TagsOnLessons {
