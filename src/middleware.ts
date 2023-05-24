@@ -1,13 +1,14 @@
+// middleware/index.ts
 import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
 
-async function rewrites(req: NextRequest) {
+function rewrites(req: NextRequest) {
   const url = req.nextUrl;
   const hostname = req.headers.get("host") || process.env.DOMAIN || "localhost:3000";
   const path = url.pathname;
@@ -16,6 +17,10 @@ async function rewrites(req: NextRequest) {
     ? hostname.replace(`.${process.env.DOMAIN}`, "").replace(`.${process.env.VERCEL_TEAM_DOMAIN}`, "")
     : hostname.replace(`.${process.env.DOMAIN}`, "");
 
+  if (path.startsWith("/api")) {
+    return NextResponse.next();
+  }
+  
   if (currentHost === "learn" || currentHost === "create") {
     url.pathname = `/${currentHost}${url.pathname}`;
     return NextResponse.rewrite(url);

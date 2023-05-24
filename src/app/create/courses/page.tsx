@@ -35,8 +35,17 @@ export default async function Page() {
 
     return (
         <div className="">
-            <h1>Creator dashboard</h1>
-            <Link href="/courses">Your courses</Link>
+            <Link href="/"> &larr; Back to dashboard</Link>
+            <h1>Your courses</h1>
+            <form action={createCourse}>
+                <button type="submit">Create a course</button>
+            </form>
+            <h2>Courses</h2>
+            {courses.length > 0 ? courses.map((course) => (
+                <Link key={course.id} href={`/courses/${course.id}`}>
+                    <h3>{course.id}</h3>
+                </Link>
+            )) : <p>You have no courses</p>}
         </div>
     )
 }
