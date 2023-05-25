@@ -41,6 +41,26 @@ export async function POST(request: NextRequest) {
         return new Response(`Transcribing lesson ${course.lessons.length - lessonsWithoutTranscription.length + 1} of ${course.lessons.length}`)
     }
 
+    // Get the lessons which do not have a summary
+    const lessonsWithoutSummary = course.lessons.filter(lesson => !lesson.summary);
+
+    // Get the summary for the next lesson which does not have one
+    if (lessonsWithoutSummary.length > 0) {
+        const url = `${process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.DOMAIN}/api/generate/summary`
+        console.log(url)
+        const transcription = await fetch(url, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${await getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                lesson_id: lessonsWithoutSummary[0].id
+            })
+        }).then(res => res.text());
+        console.log(transcription);
+        return new Response(`Summarising lesson ${course.lessons.length - lessonsWithoutTranscription.length + 1} of ${course.lessons.length}`)
+    }
 
 
     console.log("Generation complete")
