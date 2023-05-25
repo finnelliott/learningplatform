@@ -1,7 +1,15 @@
 import { NextRequest } from "next/server";
 import prisma from "@/../prisma/prismadb";
+import refetchCourseGeneration from "@/utils/refetchCourseGeneration";
+import { getAuth } from "@clerk/nextjs/server";
 
 export async function POST(request: NextRequest) {
+  const { getToken } = getAuth(request);
+  const token = await getToken();
+  if (!token) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const { lesson_id } = await request.json();
   
   const lesson = await prisma.lesson.findUnique({
@@ -23,7 +31,7 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
       "messages": [
-        {"role": "system", "content": `You are going to be provided with a transcript for a lesson in a video course. Please summarise the transcript into 200 words or less. Provide the summary as a description of the lesson's content.`},
+        {"role": "system", "content": `You are going to be provided with a transcript for a lesson in a video course. Please summarise the transcript into 80 words or less. Provide the summary as a description of the lesson's content.`},
         {"role": "user", "content": lesson.transcription }
       ]
     })
@@ -37,6 +45,8 @@ export async function POST(request: NextRequest) {
       summary: response.choices[0].message.content
     }
   })
+
+  refetchCourseGeneration(lesson.course_id, token);
 
   return new Response("Summary generated successfully", { status: 200 })
 }

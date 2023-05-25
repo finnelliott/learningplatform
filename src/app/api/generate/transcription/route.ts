@@ -4,37 +4,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import fs from 'fs';
 import axios from "axios";
 import FormData from "form-data";
-
-async function fetchGenerateCourse(course_id: string, token: string) {
-  const url = `${process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.DOMAIN}/api/generate/course`
-  fetch(url, {
-    method: 'POST',
-    headers: { 
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      course_id: course_id
-  })
-  });
-  return;
-}
-
-async function downloadFile(url: string, filePath: string) {
-  const response = await axios({
-    method: 'get',
-    url: url,
-    responseType: 'stream',
-  });
-
-  const writer = fs.createWriteStream(filePath);
-  response.data.pipe(writer);
-
-  return new Promise((resolve, reject) => {
-    writer.on('finish', resolve);
-    writer.on('error', reject);
-  });
-}
+import refetchCourseGeneration from "@/utils/refetchCourseGeneration";
 
 export async function POST(request: NextRequest) {
   console.log("Requested lesson transcription")
@@ -80,7 +50,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    fetchGenerateCourse(lesson.course_id, token);
+    refetchCourseGeneration(lesson.course_id, token);
 
     return new Response("Enabled downloads for lesson.")
   }
@@ -130,7 +100,7 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  fetchGenerateCourse(lesson.course_id, token);
+  refetchCourseGeneration(lesson.course_id, token);
 
   return new Response("Generated transcription successfully.", { status: 200 })
 }
