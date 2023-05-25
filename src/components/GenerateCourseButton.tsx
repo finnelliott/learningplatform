@@ -2,7 +2,7 @@
 
 export default function GenerateCourseButton({ course_id }: { course_id: string }) {
     async function generateCourse() {
-        const url = `${process.env.PRODUCTION ? 'https://' : 'http://'}create.${process.env.NEXT_PUBLIC_DOMAIN}/api/generate/course`
+        const url = `${process.env.NODE_ENV === "production" && process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.NEXT_PUBLIC_DOMAIN}/api/generate/course`
         console.log(url)
         const response = await fetch(url, {
             method: "POST",
