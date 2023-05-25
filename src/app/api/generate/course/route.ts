@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Get the transcript for the next lesson which does not have one
     if (lessonsWithoutTranscription.length > 0) {
-        const url = `${process.env.NODE_ENV === "production" && process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.DOMAIN}/api/generate/transcription`
+        const url = `${process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.DOMAIN}/api/generate/transcription`
         console.log(url)
         const transcription = await fetch(url, {
             method: 'POST',

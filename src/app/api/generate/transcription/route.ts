@@ -6,7 +6,7 @@ import axios from "axios";
 import FormData from "form-data";
 
 async function fetchGenerateCourse(course_id: string, token: string) {
-  const url = `${process.env.NODE_ENV === "production" && process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.DOMAIN}/api/generate/course`
+  const url = `${process.env.VERCEL === "1" ? 'https://' : 'http://'}create.${process.env.DOMAIN}/api/generate/course`
   fetch(url, {
     method: 'POST',
     headers: { 
