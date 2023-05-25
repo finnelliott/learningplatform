@@ -24,6 +24,7 @@ model EnrolledUsersOnCourses {
 
 model Course {
   id              String                   @id @default(auto()) @map("_id") @db.ObjectId
+  status          String                   @default("draft")        
   name            String?
   description     String?
   tags            TagsOnCourses[]
@@ -58,7 +59,9 @@ model Lesson {
   course_id        String          @db.ObjectId
   video_upload_url String?
   video_id         String?
+  video_download_url String?
   transcription    String?
+  summary          String?
   markdown         String?
   duration_seconds Int?
   order            Int?
